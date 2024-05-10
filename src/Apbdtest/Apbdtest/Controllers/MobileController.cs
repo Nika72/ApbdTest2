@@ -1,37 +1,42 @@
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using ApbdTest.Models;
 using ApbdTest.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApbdTest.Controllers
 {
-    public class MobileController : ApiController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class MobileController : ControllerBase
     {
-        private MobileService _mobileService = new MobileService();
+        private MobileService _mobileService;
+
+        public MobileController(MobileService mobileService)
+        {
+            _mobileService = mobileService; // Dependency injection
+        }
 
         [HttpPost]
-        [Route("api/mobile")]
-        public IHttpActionResult CreateOrUpdateClient([FromBody] Client clientData)
+        public IActionResult CreateOrUpdateClient([FromBody] Client clientData)
         {
             var response = _mobileService.CreateOrUpdateClient(clientData);
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("api/mobile")]
-        public IHttpActionResult GetClientByMobileNumber(string mobileNumber)
+        [HttpGet("{mobileNumber}")]
+        public IActionResult GetClientByMobileNumber(string mobileNumber)
         {
             var response = _mobileService.GetClientByMobileNumber(mobileNumber);
-            if (response == null) return NotFound();
+            if (response == null)
+                return NotFound();
             return Ok(response);
         }
 
-        [HttpDelete]
-        [Route("api/mobile")]
-        public IHttpActionResult DeleteClientByMobileNumber(string mobileNumber)
+        [HttpDelete("{mobileNumber}")]
+        public IActionResult DeleteClientByMobileNumber(string mobileNumber)
         {
             var response = _mobileService.DeleteClientByMobileNumber(mobileNumber);
-            if (!response) return NotFound();
+            if (!response)
+                return NotFound();
             return Ok();
         }
     }
