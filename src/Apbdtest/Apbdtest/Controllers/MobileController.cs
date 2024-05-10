@@ -8,7 +8,7 @@ namespace ApbdTest.Controllers
     [Route("api/[controller]")]
     public class MobileController : ControllerBase
     {
-        private MobileService _mobileService;
+        private readonly MobileService _mobileService;
 
         public MobileController(MobileService mobileService)
         {
